@@ -83,7 +83,7 @@ function Task() {
                 >
                   <td className="TableTdShort">
                     {/* {item.attributes.developer} */}
-                   jjjkkjkj
+                   jjjkk
                   </td>
                   <td className="TableTdShort">
                     {/* {item.attributes.date} */}
