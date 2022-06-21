@@ -12,29 +12,42 @@ function Task() {
     const[task,SetTask]=useState('');
     const[status,SetStatus]=useState('');
     const[remarks,SetRemarks]=useState(''); 
+    console.log("page refresh")
     const [get,setGet]=useState([])
     console.log(get)
-
 
     const saveData=(e)=>{
         e.preventDefault()
         const myjson={
-            selectedDate:selectedDate.toISOString(),
+            selectedDate:selectedDate.toDateString(),
             task:task,
             status:status,
             remarks:remarks
         }
-       // console.log(myjson)
-        setGet(myjson)
+      
+        setGet(current => [...current, myjson])
+    }
 
+
+    const handledelete=(index,e)=>{
+       const dleteditem=get.filter((v,i) =>i!==index);
+    setGet(dleteditem)
     }
     
+
+    const handleedit=(item)=>{
+
+    setselecteDdate(item.selectedDate)
+    SetTask(item.task)
+    SetStatus(item.status)
+    SetRemarks(item.remarks)
+
+    }
 
   return (
     <div>
       <div class=" flex justify-center my-8 m-12">
         <div class=" bg-blue-600 flex justify-center py-1 w-28 rounded ">
-          {/* <button style={{color:"white"}} onClick={()=>handleShow()}>Addnew</button> */}
           <button
             type="button"
             class="px-6
@@ -66,7 +79,6 @@ function Task() {
             <table className="Table">
               <thead>
                 <tr>
-                  <th className="TableThShort">Developer</th>
                   <th className="TableThShort">Date</th>
                   <th className="TableThLong">Task</th>
                   <th className="TableThShort">Status</th>
@@ -77,39 +89,29 @@ function Task() {
                 </tr>
               </thead>
               <tbody>
-                {get.map((item,id)=>
+                {get.map((item,index)=>
                 <tr
-                  key={id}
+                  key={index}
                 >
                   <td className="TableTdShort">
-                    {/* {item.attributes.developer} */}
-                   jjjkk
-                  </td>
-                  <td className="TableTdShort">
-                    {/* {item.attributes.date} */}
                     {item.selectedDate}
-                   
                   </td>
                   <td className="TableTdLong">
                     <div className="TableCss">
-                      {/* {item.attributes.task} */}
-                      {item.SetTask}
-                     
+                      {item.task} 
                     </div>
                   </td>
                   <td className="TableTdShort">
-                    {/* {item.attributes.status} */}
                     {item.status}
                   </td>
                   <td className="TableTdLong">
                     <div className="TableCss">
-                      {/* {item.attributes.remarks} */}
                       {item.remarks}
                     </div>
                   </td>
                   <td className="TableTdShort" style={{ textAlign: "center" }}>
-                    <AiFillEdit className="EditIcon" />
-                    <AiFillDelete className="DeleteIcon" />
+                    <AiFillEdit className="EditIcon"  data-bs-dismiss="modal"  onClick={()=>handleedit(item,index)} />
+                    <AiFillDelete className="DeleteIcon" onClick={(e)=>handledelete(index,e)} />
                   </td>
                 </tr>
                  )}      
@@ -143,18 +145,21 @@ function Task() {
               ></button>
             </div>
             <div class="modal-body relative p-4">
-            <div class=" xl:w-96 ">
+            <div class=" xl:w-96  flex py-3 pt-8 ">
             <label class="form-label inline-block mb-2 text-gray-700">
                   Choose Date:
                 </label>   
-            <DatePicker className='inputtext'
+                <div className="border-solid border-2 ml-5 border-[#ccc]  ">
+                <DatePicker className='inputtext' 
                     selected={selectedDate}
                     onChange={date=>setselecteDdate(date)}
                     dateFormat='dd/MM/yyyy'
                     value={selectedDate} 
                      />
+                </div>
+
             </div>
-              <div class=" xl:w-96 ">
+              <div class=" xl:w-96 py-3">
                 <label class="form-label inline-block mb-2 text-gray-700">
                   Task Name:
                 </label>
@@ -167,8 +172,8 @@ function Task() {
               </div>
               <div class=" xl:w-96 ">
      <label class="form-label inline-block mb-2 text-gray-700">Status:</label>
-     <div>
-    <div class="form-check">
+     <div className="flex">
+    <div class="form-check px-4 pb-6">
       <input class="form-check-input appearance-none rounded-full h-4 w-4 border border-gray-300 bg-white checked:bg-blue-600 checked:border-blue-600 focus:outline-none transition duration-200 mt-1 align-top bg-no-repeat bg-center bg-contain float-left mr-2 cursor-pointer" type="radio" name="flexRadioDefault" id="Done"  value="DONE"
         checked={status==="DONE"}
         onChange={(e)=>SetStatus(e.target.value)}/>
@@ -176,7 +181,7 @@ function Task() {
         Done
       </label>
     </div>
-    <div class="form-check">
+    <div class="form-check  px-4">
       <input class="form-check-input appearance-none rounded-full h-4 w-4 border border-gray-300 bg-white checked:bg-blue-600 checked:border-blue-600 focus:outline-none transition duration-200 mt-1 align-top bg-no-repeat bg-center bg-contain float-left mr-2 cursor-pointer" type="radio" name="flexRadioDefault" id="Inprogress"
         value="INPROGRESS"
         checked={status==="INPROGRESS"}
@@ -186,7 +191,7 @@ function Task() {
         Inprogress
       </label>
     </div>
-    <div class="form-check">
+    <div class="form-check px-4">
       <input class="form-check-input appearance-none rounded-full h-4 w-4 border border-gray-300 bg-white checked:bg-blue-600 checked:border-blue-600 focus:outline-none transition duration-200 mt-1 align-top bg-no-repeat bg-center bg-contain float-left mr-2 cursor-pointer" type="radio" name="flexRadioDefault" id="ONHold"
        value="ONHOLD"
         checked={status==="ONHOLD"}
@@ -269,7 +274,7 @@ function Task() {
       duration-150
       ease-in-out
       ml-1"
-
+      data-bs-dismiss="modal"
       onClick={(e)=>saveData(e)}
               >
                 Save
